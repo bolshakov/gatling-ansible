@@ -1,0 +1,13 @@
+[workers]
+workers-[001:002]
+
+[local]
+localhost
+
+[vars]
+
+vscale_image=ubuntu_16.04_64_001_docker
+vscale_location=spb0
+vscale_plan=medium
+
+simulation_name=BasicSimulation

@@ -1,0 +1,92 @@
+---
+
+- name: Provisin vagrant hosts
+  hosts: local
+  connection: local
+  tags:
+    - provision
+  tasks:
+    - name: Provision
+      shell: vagrant up
+    - name: Ensure SSH config does not exists
+      copy:
+        content: ""
+        dest: ./files/ssh_config
+        force: yes
+    - name: Gather ssh-config from vagrant
+      shell: "vagrant ssh-config {{ item }}"
+      register: ssh_configs
+      with_items:
+        - "{{ groups['workers'] }}"
+    - name: Save SSH config to files/ssh_config
+      lineinfile:
+        dest: files/ssh_config
+        line: "{{ item.stdout }}\n"
+      with_items:
+        - "{{ ssh_configs.results }}"
+
+
+- name: Prepare master
+  hosts: local
+  connection: local
+  tasks:
+    - include: tasks/prepare_master.yml
+
+- name: Prepare workers
+  hosts: workers
+  tags:
+    - config
+  tasks:
+    - include: tasks/prepare_worker.yml
+
+- name: Deliver docker contianer
+  hosts: workers
+  tags:
+    - run
+  tasks:
+    - name: Run Gatling
+      docker_container:
+        name: gatling-load
+        image: docker.spbtv.com/gatling
+        state: started
+        detach: false # By default this is true
+        restart: true
+        network_mode: host
+        command:
+          - --no-reports
+          - --simulations-folder /gatling/user-files/simulations
+          - --simulation computerdatabase.BasicSimulation
+        volumes:
+          - /tmp/gatling/reports:/gatling/report
+          - /tmp/gatling/results:/gatling/results
+          - /tmp/gatling/logs:/gatling/logs
+
+    - name: Rename /tmp/gatling/results-{timustamp} to /tmp/gatling/results/results
+      shell: ls -t /tmp/gatling/results | head -n 1 | xargs -I {} mv /tmp/gatling/results/{} /tmp/gatling/results/results/
+      become: true
+    - name: Copy results
+      fetch:
+        src: /tmp/gatling/results/results/simulation.log
+        dest: "./gatling/results/simulation-{{ inventory_hostname }}.log"
+        flat: true
+
+
+- name: Generate report
+  hosts: local
+  connection: local
+  tags:
+    - report
+  tasks:
+    - name: Generate report
+      docker_container:
+        name: gatling-load
+        image: docker.spbtv.com/gatling
+        state: started
+        detach: false # By default this is true
+        restart: true
+        network_mode: host
+        command:
+          - --reports-only /gatling/results/
+        volumes:
+          - '{{ playbook_dir }}/gatling/reports:/gatling/reports'
+          - '{{ playbook_dir }}/gatling/results:/gatling/results'

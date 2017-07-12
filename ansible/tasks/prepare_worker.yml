@@ -1,0 +1,36 @@
+---
+
+- name: Ansible Docker prerequisites
+  pip:
+    name: docker-py
+    version: 1.7.0
+    state: present
+  become: true
+
+- name: Copy docker container to worker
+  copy:
+    src: ./files/docker-image-gatling.tar
+    dest: /tmp/docker-image-gatling.tar
+
+- name: Load image from archive and push to a private registry
+  docker_image:
+    name: gatling:latest
+    push: no
+    state: present
+    force: true
+    load_path: /tmp/docker-image-gatling.tar
+
+- name: Ensure gatling reports are empty
+  file:
+    path: '/tmp/gatling'
+    state: absent
+  become: true
+
+- name: Create directory for gatling reports
+  file:
+    path: '/tmp/gatling/{{ item }}'
+    state: directory
+  with_items:
+    - reports
+    - results
+    - logs

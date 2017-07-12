@@ -1,0 +1,7 @@
+---
+
+- name: Pull Rosing Image
+  hosts: workers
+  tasks:
+    - include: tasks/vscale_provisioning.yml
+

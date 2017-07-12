@@ -1,0 +1,9 @@
+# see Vagrant file and unsure it provision the same hasts
+[workers]
+workers-[1:2] ansible_ssh_common_args="-F ./ansible/files/ssh_config"
+
+[local]
+localhost
+
+[vars]
+simulation_name=BasicSimulation

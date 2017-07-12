@@ -1,0 +1,29 @@
+---
+
+- name: Ansible Docker prerequisites
+  tags:
+    - config
+  pip:
+    name: docker-py
+    version: 1.7.0
+    state: present
+- name: Ensure gatling reports are empty
+  tags:
+    - run
+  file:
+    path: './gatling/{{ item }}'
+    state: absent
+  with_items:
+    - reports
+    - results
+    - logs
+- name: Create directory for gatling reports
+  tags:
+    - run
+  file:
+    path: './gatling/{{ item }}'
+    state: directory
+  with_items:
+    - reports
+    - results
+    - logs
