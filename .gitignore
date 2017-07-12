@@ -1,4 +1,4 @@
 ansible/files/docker-image-gatling.tar
 ansible/files/ssh_config
-ansible/files/gatling/**/*
+ansible/results/**/*
 .vagrant/**/*

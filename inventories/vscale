@@ -9,5 +9,3 @@ localhost
 vscale_image=ubuntu_16.04_64_001_docker
 vscale_location=spb0
 vscale_plan=medium
-
-simulation_name=BasicSimulation

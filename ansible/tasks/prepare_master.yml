@@ -11,19 +11,11 @@
   tags:
     - run
   file:
-    path: './gatling/{{ item }}'
+    path: './results'
     state: absent
-  with_items:
-    - reports
-    - results
-    - logs
 - name: Create directory for gatling reports
   tags:
     - run
   file:
-    path: './gatling/{{ item }}'
+    path: './results'
     state: directory
-  with_items:
-    - reports
-    - results
-    - logs

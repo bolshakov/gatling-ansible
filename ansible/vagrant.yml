@@ -57,9 +57,7 @@
           - --simulations-folder /gatling/user-files/simulations
           - --simulation computerdatabase.BasicSimulation
         volumes:
-          - /tmp/gatling/reports:/gatling/report
           - /tmp/gatling/results:/gatling/results
-          - /tmp/gatling/logs:/gatling/logs
 
     - name: Rename /tmp/gatling/results-{timustamp} to /tmp/gatling/results/results
       shell: ls -t /tmp/gatling/results | head -n 1 | xargs -I {} mv /tmp/gatling/results/{} /tmp/gatling/results/results/
@@ -67,7 +65,7 @@
     - name: Copy results
       fetch:
         src: /tmp/gatling/results/results/simulation.log
-        dest: "./gatling/results/simulation-{{ inventory_hostname }}.log"
+        dest: "./results/simulation-{{ inventory_hostname }}.log"
         flat: true
 
 
@@ -88,5 +86,4 @@
         command:
           - --reports-only /gatling/results/
         volumes:
-          - '{{ playbook_dir }}/gatling/reports:/gatling/reports'
-          - '{{ playbook_dir }}/gatling/results:/gatling/results'
+          - '{{ playbook_dir }}/results:/gatling/results'

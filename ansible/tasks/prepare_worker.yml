@@ -28,9 +28,5 @@
 
 - name: Create directory for gatling reports
   file:
-    path: '/tmp/gatling/{{ item }}'
+    path: '/tmp/gatling/results'
     state: directory
-  with_items:
-    - reports
-    - results
-    - logs
