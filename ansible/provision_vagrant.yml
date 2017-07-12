@@ -1,0 +1,26 @@
+---
+
+- name: Provisin vagrant hosts
+  hosts: local
+  connection: local
+  tags:
+    - provision
+  tasks:
+    - name: Provision
+      shell: vagrant up
+    - name: Ensure SSH config does not exists
+      copy:
+        content: ""
+        dest: ./files/ssh_config
+        force: yes
+    - name: Gather ssh-config from vagrant
+      shell: "vagrant ssh-config {{ item }}"
+      register: ssh_configs
+      with_items:
+        - "{{ groups['workers'] }}"
+    - name: Save SSH config to files/ssh_config
+      lineinfile:
+        dest: files/ssh_config
+        line: "{{ item.stdout }}\n"
+      with_items:
+        - "{{ ssh_configs.results }}"

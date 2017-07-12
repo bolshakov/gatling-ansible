@@ -1,13 +1,12 @@
+This project aimed to run gatling simulation on multiple workers, gather results and generate report.
+ Thus, you are able to generate significant load.
+
 ## Dependencies 
 
 1. Ansible:
 
     brew install ansible 
     
-2. docker-py 
-
-    pip install 'docker-py>=1.7.0'
-
 If you're on osx:
 
     export PYTHONPATH=/usr/local/lib/python2.7/site-packages/:$PYTHONPATH
@@ -18,11 +17,21 @@ see https://github.com/ansible/ansible-modules-core/issues/4246#issuecomment-246
 
     make build_image
 
-## Testing locally 
+This action generates `ansible/files/docker-image-gatling.tar`, so we can securely transfer container to worker 
+via ssh (instead of repository).
+
+TODO: do we really need this?
+
+## Provision workers
+ 
+To test how it works you may run it locally using Vagrant. 
 
 1. Install [vagrant](https://www.vagrantup.com) 
 2. Provision workers
   
-    ansible-playbook -i inventories/vagrant ansible/vagrant.yml
+    ansible-playbook -i inventories/vagrant ansible/provision_vagrant.yml
 
-3. 
+
+## Run simulation
+
+    ansible-playbook -i inventories/vagrant ansible/simulation.yml
