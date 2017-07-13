@@ -1,10 +1,10 @@
 [workers]
-workers-[001:002]
+workers-[001:001]
 
 [local]
 localhost
 
-[vars]
+[workers:vars]
 
 vscale_image=ubuntu_16.04_64_001_docker
 vscale_location=spb0

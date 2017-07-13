@@ -5,13 +5,11 @@
     name: docker-py
     version: 1.10.6
     state: present
-  become: true
 
 - name: Ensure gatling reports are empty
   file:
     path: '/tmp/gatling'
     state: absent
-  become: true
 
 - name: Create directory for gatling reports
   file:

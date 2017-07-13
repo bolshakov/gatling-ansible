@@ -13,16 +13,29 @@ If you're on osx:
     
 see https://github.com/ansible/ansible-modules-core/issues/4246#issuecomment-246841624
 
-## Provision workers
+## Simulation
  
-To test how it works you may run it locally using Vagrant. 
+You can either run simulation in vagrant boxes, or on remote serves (only VScale currently supported)
+
+### VirtualBox workers
+ 
 
 1. Install [vagrant](https://www.vagrantup.com) 
-2. Provision workers
+2. Run simulation
   
-    ansible-playbook -i inventories/vagrant ansible/provision_vagrant.yml
+    ansible-playbook -i inventories/vagrant ansible/vagrant.yml
 
+### VScale workers
+    
+[Generate](https://vscale.io/panel/settings/tokens/) and export your API token to `VS_API_KEY` environment variable:  
+ 
+    export VS_API_KEY=62958c82732254edc648628c827397fa91f53df435e88bf4bd8c29b952e32c9e35fa93
 
-## Run simulation
+Generate SSH keys:
 
-    ansible-playbook -i inventories/vagrant ansible/simulation.yml
+    $ ssh-keygen -f ./ansuble/credentials/vscale
+    
+And run simulation:
+
+    ansible-playbook -i inventories/vscale ansible/vscale.yml
+    

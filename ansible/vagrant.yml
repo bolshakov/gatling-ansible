@@ -1,5 +1,11 @@
 ---
 
+- name: Prepare master
+  hosts: local
+  connection: local
+  tasks:
+    - include: tasks/prepare_master.yml
+
 - name: Provisin vagrant hosts
   hosts: local
   connection: local
@@ -24,3 +30,16 @@
         line: "{{ item.stdout }}\n"
       with_items:
         - "{{ ssh_configs.results }}"
+
+- name: Run simulation
+  hosts: workers
+  become: true
+  tasks:
+    - include: tasks/prepare_worker.yml
+    - include: tasks/simulation.yml
+
+- name: Generate report
+  hosts: local
+  connection: local
+  tasks:
+    - include: tasks/report.yml

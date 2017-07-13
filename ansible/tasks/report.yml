@@ -1,0 +1,22 @@
+---
+
+- name: Ansible Docker prerequisites
+  pip:
+    name: docker-py
+    version: 1.10.6
+    state: present
+
+- name: Generate report
+  docker_container:
+    name: gatling-generate-report
+    image: "{{ gatling_docker_image }}"
+    state: started
+    detach: false # By default this is true
+    restart: true
+    network_mode: host
+    command:
+      - --reports-only /gatling/results/
+    volumes:
+      - '{{ playbook_dir }}/results:/gatling/results'
+- name: Open report
+  shell: open ./results/index.html

@@ -1,0 +1,70 @@
+---
+
+- name: Prepare master
+  hosts: local
+  connection: local
+  tasks:
+    - include: tasks/prepare_master.yml
+
+- name: Prepare SSH
+  hosts: workers
+  connection: local
+  vars_files:
+    - vars/vscale.yml
+  gather_facts: false
+  tasks:
+    - name: Add SSH key to Vscale account
+      run_once: true
+      vscale_ssh:
+        token: "{{ vscale_api_key }}"
+        name: Ansible
+        public_key: "{{ ssh_public_key }}"
+        state: present
+
+- name: Run simulation
+  hosts: workers
+  connection: local
+  gather_facts: false
+  vars_files:
+    - vars/vscale.yml
+  tasks:
+    - name: Create scalet for inventory hosts
+      vscale_scalets:
+        token: "{{ vscale_api_key }}"
+        name: "{{ inventory_hostname }}"
+        plan: "{{ vscale_plan }}"
+        location: "{{ vscale_location }}"
+        image: "{{ vscale_image }}"
+        key_name: "Ansible"
+        collect_facts: "yes"
+        power_state: "started"
+        state: present
+      register: server
+    - set_fact:
+        ansible_ssh_host: "{{ server['scalet']['public_address']['address'] }}"
+        ansible_ssh_private_key_file: "{{ playbook_dir }}/credentials/vscale"
+    - include: tasks/prepare_worker.yml
+    - include: tasks/simulation.yml
+
+- name: Generate report
+  hosts: local
+  connection: local
+  tasks:
+    - include: tasks/report.yml
+
+- name: Clean up
+  hosts: workers
+  connection: local
+  gather_facts: false
+  vars_files:
+    - vars/vscale.yml
+  tasks:
+    - name: Destroy scalets
+      vscale_scalets:
+        token: "{{ vscale_api_key }}"
+        name: "{{ inventory_hostname }}"
+        plan: "{{ vscale_plan }}"
+        location: "{{ vscale_location }}"
+        image: "{{ vscale_image }}"
+        state: absent
+      register: server
