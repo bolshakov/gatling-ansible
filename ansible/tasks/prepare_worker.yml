@@ -8,10 +8,10 @@
 
 - name: Ensure gatling reports are empty
   file:
-    path: '/tmp/gatling'
+    path: "{{ gatling_host_dir }}"
     state: absent
 
 - name: Create directory for gatling reports
   file:
-    path: '/tmp/gatling/results'
+    path: "{{ gatling_host_dir }}/results"
     state: directory

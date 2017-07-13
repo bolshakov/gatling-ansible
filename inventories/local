@@ -1,0 +1,9 @@
+# see Vagrant file and unsure it provision the same hasts
+[workers]
+workers-[1:2]
+
+[local]
+localhost
+
+[vars]
+simulation_name=BasicSimulation

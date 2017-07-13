@@ -2,7 +2,7 @@
 
 - name: Run Gatling
   docker_container:
-    name: gatling-load
+    name: gatling-load-{{ inventory_hostname }}
     image: "{{ gatling_docker_image }}"
     state: started
     detach: false # By default this is true
@@ -13,13 +13,13 @@
       - --simulations-folder /gatling/user-files/simulations
       - --simulation computerdatabase.BasicSimulation
     volumes:
-      - /tmp/gatling/results:/gatling/results
+      - "{{ gatling_host_dir }}/results:/gatling/results"
 
 - name: Rename /tmp/gatling/results-{timustamp} to /tmp/gatling/results/results
-  shell: ls -t /tmp/gatling/results | head -n 1 | xargs -I {} mv /tmp/gatling/results/{} /tmp/gatling/results/results/
+  shell: ls -t {{ gatling_host_dir }}/results | head -n 1 | xargs -I {} mv {{ gatling_host_dir }}/results/{} {{ gatling_host_dir }}/results/results/
 - name: Copy results
   fetch:
-    src: /tmp/gatling/results/results/simulation.log
+    src: "{{ gatling_host_dir }}/results/results/simulation.log"
     dest: "./results/simulation-{{ inventory_hostname }}.log"
     flat: true
 

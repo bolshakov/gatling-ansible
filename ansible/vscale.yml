@@ -6,7 +6,7 @@
   tasks:
     - include: tasks/prepare_master.yml
 
-- name: Prepare SSH
+- name: Ensure public SSH key exists in VScale
   hosts: workers
   connection: local
   vars_files:
@@ -42,7 +42,6 @@
       register: server
     - set_fact:
         ansible_ssh_host: "{{ server['scalet']['public_address']['address'] }}"
-        ansible_ssh_private_key_file: "{{ playbook_dir }}/credentials/vscale"
     - include: tasks/prepare_worker.yml
     - include: tasks/simulation.yml
 
@@ -56,6 +55,8 @@
   hosts: workers
   connection: local
   gather_facts: false
+  tags:
+    - cleanup
   vars_files:
     - vars/vscale.yml
   tasks:

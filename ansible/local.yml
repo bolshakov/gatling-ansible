@@ -1,0 +1,20 @@
+---
+
+- name: Prepare master
+  hosts: local
+  connection: local
+  tasks:
+    - include: tasks/prepare_master.yml
+
+- name: Run simulation
+  hosts: workers
+  connection: local
+  tasks:
+    - include: tasks/prepare_worker.yml
+    - include: tasks/simulation.yml
+
+- name: Generate report
+  hosts: local
+  connection: local
+  tasks:
+    - include: tasks/report.yml

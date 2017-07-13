@@ -1,5 +1,6 @@
 [workers]
-workers-[001:001]
+workers-[001:005] vscale_location=spb0
+workers-[006:010] vscale_location=msk0
 
 [local]
 localhost
@@ -7,5 +8,4 @@ localhost
 [workers:vars]
 
 vscale_image=ubuntu_16.04_64_001_docker
-vscale_location=spb0
 vscale_plan=medium

@@ -1,14 +1,16 @@
 ---
 
 - name: Ensure gatling reports are empty
-  tags:
-    - run
   file:
     path: './results'
     state: absent
 - name: Create directory for gatling reports
-  tags:
-    - run
   file:
     path: './results'
     state: directory
+- name: Ensure private SSH key exists
+  user:
+    name: "{{ ansible_user_id }}"
+    generate_ssh_key: yes
+    ssh_key_file: "{{ ansible_ssh_private_key_file }}"
+

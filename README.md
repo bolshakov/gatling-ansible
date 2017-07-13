@@ -30,12 +30,18 @@ You can either run simulation in vagrant boxes, or on remote serves (only VScale
 [Generate](https://vscale.io/panel/settings/tokens/) and export your API token to `VS_API_KEY` environment variable:  
  
     export VS_API_KEY=62958c82732254edc648628c827397fa91f53df435e88bf4bd8c29b952e32c9e35fa93
-
-Generate SSH keys:
-
-    $ ssh-keygen -f ./ansuble/credentials/vscale
     
 And run simulation:
 
     ansible-playbook -i inventories/vscale ansible/vscale.yml
     
+If something went wrong and your servers still up:
+
+    ansible-playbook -i inventories/vscale ansible/vscale.yml --tags 'cleanup'
+    
+
+### Locally in docker
+
+Run simulation:
+
+    ansible-playbook -i inventories/local ansible/local.yml

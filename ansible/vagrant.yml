@@ -9,8 +9,6 @@
 - name: Provisin vagrant hosts
   hosts: local
   connection: local
-  tags:
-    - provision
   tasks:
     - name: Provision
       shell: vagrant up
