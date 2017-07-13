@@ -13,15 +13,6 @@ If you're on osx:
     
 see https://github.com/ansible/ansible-modules-core/issues/4246#issuecomment-246841624
 
-## Build docker container
-
-    make build_image
-
-This action generates `ansible/files/docker-image-gatling.tar`, so we can securely transfer container to worker 
-via ssh (instead of repository).
-
-TODO: do we really need this?
-
 ## Provision workers
  
 To test how it works you may run it locally using Vagrant. 

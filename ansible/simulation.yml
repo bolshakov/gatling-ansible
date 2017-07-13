@@ -21,7 +21,7 @@
     - name: Run Gatling
       docker_container:
         name: gatling-load
-        image: docker.spbtv.com/gatling
+        image: "{{ gatling_docker_image }}"
         state: started
         detach: false # By default this is true
         restart: true
@@ -51,8 +51,8 @@
   tasks:
     - name: Generate report
       docker_container:
-        name: gatling-load
-        image: docker.spbtv.com/gatling
+        name: gatling-generate-report
+        image: "{{ gatling_docker_image }}"
         state: started
         detach: false # By default this is true
         restart: true

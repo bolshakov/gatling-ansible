@@ -5,7 +5,7 @@
     - config
   pip:
     name: docker-py
-    version: 1.7.0
+    version: 1.10.6
     state: present
 - name: Ensure gatling reports are empty
   tags:

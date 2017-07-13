@@ -1,0 +1,2 @@
+---
+gatling_docker_image: bolshakov/gatling:{{ gatling_version | default('2.2.5') }}
