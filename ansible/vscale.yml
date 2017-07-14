@@ -7,14 +7,13 @@
     - include: tasks/prepare_master.yml
 
 - name: Ensure public SSH key exists in VScale
-  hosts: workers
+  hosts: local
   connection: local
   vars_files:
     - vars/vscale.yml
   gather_facts: false
   tasks:
     - name: Add SSH key to Vscale account
-      run_once: true
       vscale_ssh:
         token: "{{ vscale_api_key }}"
         name: Ansible
@@ -23,8 +22,8 @@
 
 - name: Run simulation
   hosts: workers
-  connection: local
   gather_facts: false
+#  strategy: free # allows each host to run until the end of the play as fast as it can
   vars_files:
     - vars/vscale.yml
   tasks:
@@ -36,12 +35,21 @@
         location: "{{ vscale_location }}"
         image: "{{ vscale_image }}"
         key_name: "Ansible"
-        collect_facts: "yes"
-        power_state: "started"
+        collect_facts: true
+        power_state: started
         state: present
       register: server
+      delegate_to: 127.0.0.1
     - set_fact:
         ansible_ssh_host: "{{ server['scalet']['public_address']['address'] }}"
+    - name: Install python
+      apt:
+        name: "{{ item }}"
+        state: present
+        update_cache: true
+      with_items:
+        - python3
+        - python3-pip
     - include: tasks/prepare_worker.yml
     - include: tasks/simulation.yml
 
@@ -53,7 +61,6 @@
 
 - name: Clean up
   hosts: workers
-  connection: local
   gather_facts: false
   tags:
     - cleanup
@@ -68,4 +75,4 @@
         location: "{{ vscale_location }}"
         image: "{{ vscale_image }}"
         state: absent
-      register: server
+      delegate_to: 127.0.0.1
