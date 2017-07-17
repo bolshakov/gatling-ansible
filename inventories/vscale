@@ -1,6 +1,6 @@
 [workers]
-workers-[001:005] vscale_location=spb0
-workers-[006:010] vscale_location=msk0
+workers-[001:075] vscale_location=spb0
+workers-[076:150] vscale_location=msk0
 
 [local]
 localhost

@@ -20,28 +20,24 @@
         public_key: "{{ ssh_public_key }}"
         state: present
 
-- name: Run simulation
+- name: Slowly provision vscale in batches
   hosts: workers
   gather_facts: false
-#  strategy: free # allows each host to run until the end of the play as fast as it can
+  serial: 10
   vars_files:
     - vars/vscale.yml
   tasks:
-    - name: Create scalet for inventory hosts
-      vscale_scalets:
-        token: "{{ vscale_api_key }}"
-        name: "{{ inventory_hostname }}"
-        plan: "{{ vscale_plan }}"
-        location: "{{ vscale_location }}"
-        image: "{{ vscale_image }}"
-        key_name: "Ansible"
-        collect_facts: true
-        power_state: started
-        state: present
-      register: server
-      delegate_to: 127.0.0.1
-    - set_fact:
-        ansible_ssh_host: "{{ server['scalet']['public_address']['address'] }}"
+    - include: tasks/vscale_provision.yml
+
+- name: Run simulation
+  hosts: workers
+  gather_facts: false
+  strategy: free
+  vars_files:
+    - vars/vscale.yml
+  tasks:
+    # Need to be included to get ssh connection info
+    - include: tasks/vscale_provision.yml
     - name: Install python
       apt:
         name: "{{ item }}"
@@ -62,6 +58,7 @@
 - name: Clean up
   hosts: workers
   gather_facts: false
+  serial: 10
   tags:
     - cleanup
   vars_files:

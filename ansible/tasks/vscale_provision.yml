@@ -1,0 +1,15 @@
+- name: Create scalet for inventory hosts
+  vscale_scalets:
+    token: "{{ vscale_api_key }}"
+    name: "{{ inventory_hostname }}"
+    plan: "{{ vscale_plan }}"
+    location: "{{ vscale_location }}"
+    image: "{{ vscale_image }}"
+    key_name: "Ansible"
+    collect_facts: true
+    power_state: started
+    state: present
+  register: server
+  delegate_to: 127.0.0.1
+- set_fact:
+    ansible_ssh_host: "{{ server['scalet']['public_address']['address'] }}"
