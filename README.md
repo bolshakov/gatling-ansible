@@ -3,18 +3,23 @@ Thus, you are able to generate significant load.
 
 ## Dependencies 
 
-1. Ansible:
+Install Ansible:
 
 ```
-> brew install ansible 
+> brew install ansible
+```
+
+If ansible-playbook fails with error `Failed to import docker-py - No module named requests.exceptions. Try pip install docker-py`, 
+try configuring your `PYTHONPATH` enviroment variable:  
+ 
+``` 
 > export PYTHONPATH=/usr/local/lib/python2.7/site-packages/:$PYTHONPATH
 ```    
-see https://github.com/ansible/ansible-modules-core/issues/4246#issuecomment-246841624
 
 ## Simulation
 
-Place your simulations into `ansible/files/gatling_user_files` directory and change `simulation_name` variable in 
-inventory file.
+Place simulations into `ansible/files/gatling_user_files` directory and change `simulation_name` variable in 
+a inventory file.
  
 You can either run simulation in vagrant boxes, or on remote serves (only VScale currently supported)
 
