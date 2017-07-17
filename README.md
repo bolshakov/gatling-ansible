@@ -11,6 +11,9 @@ Thus, you are able to generate significant load.
 see https://github.com/ansible/ansible-modules-core/issues/4246#issuecomment-246841624
 
 ## Simulation
+
+Place your simulations into `ansible/files/gatling_user_files` directory and change `simulation_name` variable in 
+inventory file.
  
 You can either run simulation in vagrant boxes, or on remote serves (only VScale currently supported)
 

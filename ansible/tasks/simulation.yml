@@ -11,9 +11,10 @@
     command:
       - --no-reports
       - --simulations-folder /gatling/user-files/simulations
-      - --simulation computerdatabase.BasicSimulation
+      - --simulation {{ simulation_name }}
     volumes:
       - "{{ gatling_host_dir }}/results:/gatling/results"
+      - "{{ gatling_host_dir }}/user-files:/gatling/user-files"
 
 - name: Rename /tmp/gatling/results-{timustamp} to /tmp/gatling/results/results
   shell: ls -t {{ gatling_host_dir }}/results | head -n 1 | xargs -I {} mv {{ gatling_host_dir }}/results/{} {{ gatling_host_dir }}/results/results/

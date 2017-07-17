@@ -1,5 +1,5 @@
 .vagrant/**/*
 ansible/*.retry
 ansible/files/ssh_config
-ansible/credentials/*
+ansible/files/gatling_user_files/**/*
 ansible/results/**/*

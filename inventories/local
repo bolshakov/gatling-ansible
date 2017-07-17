@@ -5,5 +5,5 @@ workers-[1:2]
 [local]
 localhost
 
-[vars]
-simulation_name=BasicSimulation
+[workers:vars]
+simulation_name=computerdatabase.BasicSimulation

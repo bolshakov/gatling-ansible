@@ -15,3 +15,8 @@
   file:
     path: "{{ gatling_host_dir }}/results"
     state: directory
+
+- name: Copy simulations to worker
+  copy:
+    src: "{{ playbook_dir }}/files/gatling_user_files/"
+    dest: "{{ gatling_host_dir }}/user-files/"
